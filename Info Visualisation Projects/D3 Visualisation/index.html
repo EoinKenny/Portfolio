@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang = "en" class="tas-com">
+	<head>
+
+		<meta charset="utf-8">
+		<title>Information Visualisation Assignment 2</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script src="http://d3js.org/topojson.v1.min.js"></script> <!-- For Reading Geographic Data -->
+
+		<!-- For Using Various Map Projections -->
+		<script src="https://d3js.org/d3-array.v1.min.js"></script>
+		<script src="https://d3js.org/d3-geo.v1.min.js"></script>
+		<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+
+	</head>
+	<body>
+		<div class="container">
+
+			<div class="jumbotron">
+				<div class="row">
+				  <div class="col-sm-12">
+				  	<h1>Channelling Hans!</h1>
+				  	<h5>Submitted by: Eoin Kenny (16206131) & Wen-Ting Chang (16203136)</h5>
+				  </div>
+				</div>
+			</div>
+
+
+
+			<div class="row">
+				<div class="col-sm-4 text-center"><button type="button" class="btn btn-primary btn-lg" id="startAnimationButton" onclick="startAnimation()">Play/Pause Animation</button>
+				</div>
+			
+				<div class="col-sm-4 text-center">
+					<div class="form-group">
+						<label for="sel1">Pick Year:</label>
+						<select class="form-control" id="dropDown1">
+						</select>
+					</div>
+				</div>
+
+				<div class="col-sm-4 text-center">
+					<div class="form-group">
+						<label for="sel1">Show Trace:</label>
+						<select class="form-control" id="dropDown2">
+						</select>
+					</div>
+				</div>
+
+			</div>
+			
+			<div class="row">
+			  <div class="col-sm-8">
+			  	<svg id="svg1"></svg>
+			  </div>
+
+			  <div class="col-sm-4">
+
+			  	<svg id="svg2"></svg>
+			  	<svg id="svg3"></svg>
+
+			  </div>		  
+			</div>
+
+		</div>
+	</body>	
+
+		<!-- Personal Scripts -->
+		<script src="svgCanvas.js" charset="utf-8"></script>
+		<script src="mainVis.js" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="style.css"> 
+
+</html>

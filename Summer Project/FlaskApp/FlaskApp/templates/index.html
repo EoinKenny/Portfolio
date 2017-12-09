@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="ISO-8859-1">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Get Bus Times</title>
+
+		<link rel="stylesheet" href="static/style.css">
+		
+		<!--JQuery Library-->
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+		<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script src="https://cdn.jsdelivr.net/jquery.ui.timepicker.addon/1.4.5/jquery-ui-timepicker-addon.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+		<!--jquery forms library-->
+		<script src="http://malsup.github.com/jquery.form.js"></script>
+		
+		<script> $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}; </script>
+		
+		<!--Bootstrap Libraries-->
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+						
+		<!--Google Map-->
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkUZsgbKCDZNWjntnPv5mQJplie2G4h64"></script>
+		<!--External JS Scripts-->
+		<script src="./static/script.js"></script>
+		<script src="./static/map.js"></script>
+
+
+	</head>
+
+	<body>		
+				
+		<div class="container">
+			
+			
+			
+			
+			<div class="frame">
+				<h1 class="bg-primary"><p class="text-center">Dublin Bus Journey Time Estimator</p></h1>
+				<img src="{{url_for('static', filename='dublinbus1.jpg')}}" class="img-responsive" alt="Responsive image">
+			</div>
+			
+			<nav class="navbar navbar-inverse">
+				
+				<div class="container-fluid">
+			
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						
+						<div class="nav nav-pills">
+						
+						<li role="presentation" class="active" id="returnHomeButton"><a href="#"><span class="glyphicon glyphicon-home"> Home</span></a></li>
+						</div>
+						
+					</div>
+
+					<div class="collapse navbar-collapse" id="mainNavBar">
+
+						<ul class="nav nav-pills">
+						  
+						  <li role="presentation" id="showTimetables"><a href="#">View Timetables</a></li>
+						  <li role="presentation" id="selectMapSearch"><a href="#">Search With Map</a></li>						
+						</ul>
+
+					</div>
+					
+				</div>
+			</nav>
+			
+			
+			
+			
+			<div id="selectRouteAndSearchPreference">
+				<div class="frame2">
+					<div class="row" id="selectRouteAndSearchByPreference">
+						<form id = "stopIdOrAddress">
+							<div class="col-md-4">
+
+								<h2 class="directionbox">Pick Route</h2>
+								<select id="form-control" name="pickRoute">
+
+								</select>
+							</div>
+							
+							<div class="col-md-4">
+								<h2 class="directionbox">Search By</h2>
+								<label class="radio-inline">
+									<input checked type="radio" name="inlineRadioOptions" id="inlineRadio1" value="stopId"> Stop ID
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="address"> Address
+								</label>
+							</div>
+							
+							<div class="col-md-4">
+								<h2 class="bg-info"><button type="submit" class="btn btn-primary btn-lg btn-block" id="firstForm">Go!</button></h2>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div id="timetableDiv" class = "timetableDiv">
+				<div class="frame2">
+					<div class="row" id="timetableDropdownRow">
+						<form id = "PickRouteTimetable">
+							<div class="row">
+							<div class="col-md-4">
+								<h2 class="bg-info">Pick Route</h2>
+							</div>
+							<div class="col-md-4">
+							
+								<select id="form-controltimetable" name="pickRouteTimetable"></select>
+							</div>
+
+							<div class="col-md-4">
+								<h2 class="bg-info"><button type="submit" class="btn btn-primary btn-lg btn-block" id="secondForm">Go!</button></h2>
+							</div>
+							</div>
+						</form>
+					</div>
+					
+					<div id="direction0TimeTable"></div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div id="selectedTimetable1Div"></div>
+						</div>
+						<div class="col-md-4">
+							<div id="selectedTimetable2Div"></div>
+						</div>
+						<div class="col-md-4">
+							<div id="selectedTimetable3Div"></div> 
+						</div>
+					</div>
+						
+					<div id="direction1TimeTable"></div>
+					
+					<div class="row">
+						<div class="col-md-4">
+							<div id="selectedTimetable1Div2"></div>
+						</div>
+						<div class="col-md-4">
+							<div id="selectedTimetable2Div2"></div>
+						</div>
+						<div class="col-md-4">
+							<div id="selectedTimetable3Div2"></div> 
+						</div>
+					</div>
+
+				</div>
+			</div>
+			
+				
+			<div id="selectDirectionDiv">
+				<div class="frame2">
+					<div class="row">
+						<div class="col-md-3">
+							<h2 class="selectDirectionText">Select <br> Direction</h2>
+						</div>
+						<div class="col-md-9">
+							<button type="button" class="btn btn-default btn-lg" id="direction1">
+								<span class="glyphicon glyphicon-circle-arrow-left"></span> 
+							</button>
+							<br>
+							<hr>
+							<button type="button" class="btn btn-default btn-lg" id="direction0">
+								<span class="glyphicon glyphicon-circle-arrow-right"></span> 
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="sourceDestTimeGoDiv">
+				<div class="frame2">
+					<div class="row">
+						<form id = "selectSourceDestFrom">
+							
+							<div class="col-md-3">
+								<h2 class="customBusHeading">Select Time/Date</h2>
+								<div id="datepicker" class="datePicker"></div>
+							</div>
+							
+							<div class="col-md-3">
+								<h2 class="customBusHeading">Source</h2>
+								<select id="form-control2" name="pickRoute" class="specialWidthSelectMenu">
+
+								</select>
+							
+								<hr>
+							
+								<h2 class="customBusHeading">Destination</h2>
+								<select id="form-control3" name="pickRoute" class="specialWidthSelectMenu">
+								</select>
+								
+								<br>
+								<hr>
+								<br>
+								
+								<button type="submit" class="btn btn-primary btn-lg btn-block" id="lastForm" >Go!</button>
+								
+								<br>
+								
+							</div>
+						</form>
+							
+							
+
+						<div class="col-md-6">
+							<div id="loader"></div>
+							<div id="travelTimeDiv" class="travelTimeDiv"></div>	
+							<div id="travelPriceDiv" class="travelPriceDiv"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="googleMapDiv" class="googleMapDiv">
+				<div class="row">
+					<div class="col-md-12">
+						<div id="googleMap" class="googleMap"></div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="mapSearchPreferenceDiv">
+				<div class="frame2">
+					
+					<div class="row">
+						<div class="col-md-12">
+							<h1 class="bg-primary"><p class="text-center">Select Search Preference</p></h1>
+							<h3 class="text-center"><i>(Click both your start & destination points)</i></h3>
+						</div>
+					</div>
+					<BR>
+					<BR>
+						<div class="row">
+							<div class="threePicturesForMapSearch">
+								<ul class="nav nav-pills">
+									
+									
+									<div class="col-md-4">
+									<li role="presentation"><a href="#"><div id="searchByFare"><span class="glyphicon glyphicon-euro"> Best Fare</span></div></a></li>
+									</div>
+										
+									<div class="col-md-4">	
+									<li role="presentation"><a href="#"><div id="searchByWalkingDistance"><span class="glyphicon glyphicon-fullscreen"> Least Walking</span></div></a></li>
+									</div>
+									<div class="col-md-4">
+									<li role="presentation"><a href="#"><div id="searchByArrivalTime"><span class="glyphicon glyphicon-dashboard"> Next Arrival</span></div></a></li>
+									</div>
+									
+									
+								</ul>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
